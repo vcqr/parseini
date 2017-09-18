@@ -6,10 +6,10 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public class ParseIni {
-    public String defaultName = "default";
-    private String sectionName;
-    public HashMap<String, Object> sections = new HashMap<String, Object>();
-    private HashMap<String, Object> property = new HashMap<String, Object>();
+    public String                   defaultName = "default";
+    private String                  sectionName;
+    public HashMap<String, Object>  sections    = new HashMap<String, Object>();
+    private HashMap<String, Object> property    = new HashMap<String, Object>();
     private HashMap<String, Object> parentMap;
 
     /**
@@ -27,7 +27,8 @@ public class ParseIni {
 
     /**
      * 文件读取
-     * @param filename 
+     * 
+     * @param filename
      * 
      * @param reader
      * @throws IOException
@@ -39,7 +40,7 @@ public class ParseIni {
         while ((line = reader.readLine()) != null) {
             parseLine(line);
         }
-        
+
         reader.close();
     }
 
@@ -55,7 +56,7 @@ public class ParseIni {
             return;
         }
 
-        //处理section
+        // 处理section
         if (line.matches("\\[.*\\]")) {
             sectionName = line.replaceFirst("\\[(.*)\\]", "$1").trim();
             property = new HashMap<String, Object>();
@@ -63,7 +64,7 @@ public class ParseIni {
                 int pos = sectionName.indexOf(':');
                 String child = sectionName.substring(0, pos).trim();
                 String parent = sectionName.substring(pos + 1).trim();
-                if(child.equals(parent) || child == parent){
+                if (child.equals(parent) || child == parent) {
                     return;
                 }
 
@@ -76,7 +77,7 @@ public class ParseIni {
             } else {
                 sections.put(sectionName, property);
             }
-        } else if (line.matches(".*=.*")) { //处理键值对
+        } else if (line.matches(".*=.*")) { // 处理键值对
             int i = line.indexOf('=');
             String name = line.substring(0, i).trim();
             String value = line.substring(i + 1).trim();
@@ -104,32 +105,34 @@ public class ParseIni {
     public void setProperty(String key, String value) {
         if (key.matches(".*\\..*")) {
             String[] keyArr = key.split("\\.");
-            //替换串
-            String tempStr = "";
-            
+            // 替换串
+            StringBuilder sb = new StringBuilder();
+
             int keyArrLen = keyArr.length;
             int i = keyArrLen - 1;
-            do{
-                tempStr = keyArr[i] + "." + tempStr;
-                
+            do {
+                sb.insert(0, keyArr[i] + ".");
+                String tempStr = sb.toString();
+
                 if (i == keyArrLen - 1) {
-                    //剔除后面的"."
+                    sb.setLength(0);
+                    // 剔除后面的"."
                     tempStr = tempStr.substring(0, tempStr.length() - 1);
-                    //获取前面key
-                    String prevStr = key.replace("."+tempStr, "");
+                    sb.append(tempStr);
                     
+                    // 获取前面key
+                    String prevStr = key.replace("." + tempStr, "");
+
                     this.setKeyVal(prevStr, keyArr[i], value);
-                    // 设置整串索引值
-                    property.put(key, value);
                 } else {
                     // 获取前面key
-                    String prevStr = key.replace("."+tempStr, "");
+                    String prevStr = key.replace("." + tempStr, "");
                     String currentStr = prevStr + "." + keyArr[i];
                     this.setKeyVal(prevStr, currentStr, property.get(currentStr));
                 }
-                
+
                 --i;
-            } while(i > 0);
+            } while (i > 0);
         } else {
             property.put(key, value);
         }
@@ -241,7 +244,7 @@ public class ParseIni {
     public void set(String section, String key, String val) {
         if (section.equals(null) || section == "")
             section = this.defaultName;
-        
+
         property = (HashMap<String, Object>) sections.get(section);
         if (property == null || property.equals(null))
             property = new HashMap<String, Object>();
