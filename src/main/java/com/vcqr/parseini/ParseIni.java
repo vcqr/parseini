@@ -93,6 +93,8 @@ public class ParseIni {
             }
 
             this.setProperty(name, value);
+            // 设置行数据
+            property.put(name, value);
         }
     }
 
@@ -180,6 +182,15 @@ public class ParseIni {
         return strName.substring(0, strName.length() - 1);
     }
 
+    /**
+     * 增加节
+     * 
+     * @param section
+     */
+    public void setSection(String section) {
+        sections.put(section, property);
+    }
+    
     /**
      * 获取节下所有key
      * 
