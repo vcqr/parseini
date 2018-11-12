@@ -154,7 +154,7 @@ public class ParseIni {
     public void setKeyVal(String prevkeyStr, String currentStr, Object value) {
         Object tempObj = property.get(prevkeyStr);
 
-        if (tempMap == null || tempMap.equals(null)) {
+        if (tempObj == null || tempObj.equals(null)) {
             HashMap<String, Object> valMap = new HashMap<String, Object>();
             valMap.put(currentStr, value);
             property.put(prevkeyStr, valMap);
