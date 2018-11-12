@@ -5,6 +5,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
 public class ParseIni {
     public String                   defaultName = "default";
     private String                  sectionName;
@@ -71,7 +74,7 @@ public class ParseIni {
                 parentMap = this.getSection(parent);
                 if (parentMap != null) {
                     // 继承父sections
-                    property = (HashMap<String, Object>) parentMap.clone();
+                    property =  JSONObject.parseObject(JSON.toJSONString(parentMap), HashMap.class);
                     sections.put(child, property);
                 }
             } else {
@@ -149,13 +152,14 @@ public class ParseIni {
      */
     @SuppressWarnings("unchecked")
     public void setKeyVal(String prevkeyStr, String currentStr, Object value) {
-        HashMap<String, Object> tempMap = (HashMap<String, Object>) property.get(prevkeyStr);
+        Object tempObj = property.get(prevkeyStr);
 
         if (tempMap == null || tempMap.equals(null)) {
             HashMap<String, Object> valMap = new HashMap<String, Object>();
             valMap.put(currentStr, value);
             property.put(prevkeyStr, valMap);
         } else {
+            HashMap<String, Object> tempMap =  JSONObject.parseObject(JSON.toJSONString(tempObj), HashMap.class);
             tempMap.put(currentStr, value);
             property.put(prevkeyStr, tempMap);
         }
