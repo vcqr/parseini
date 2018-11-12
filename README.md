@@ -78,6 +78,9 @@ public class App
             // 获取server2的当前server环境
             Object s2Sever = config.get("server.port", "server2");
             System.out.println("server2.serer.port = " + s2Sever);
+            
+            System.out.println("server2.server = " + config.get("server", "server2"));
+            System.out.println("server2.db = " + config.get("db", "server2"));
 
             // 设置节 sever3
             config.setSection("server3");
@@ -102,6 +105,8 @@ server1.env = dev
 server2.env = qa
 server1.server.port = 8081
 server2.serer.port = 8082
+server2.server = {port=8082, host=127.0.0.1}
+server2.db = {"password":"123456","driver":"com.mysql.jdbc.Driver","user":"server","url":"jdbc:mysql://localhost:3307/server1\";"}
 server3.env = local
 ```
 
